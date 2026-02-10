@@ -1,47 +1,85 @@
-async function pingTest(){
-  let start = performance.now();
-  await fetch("https://api.github.com/");
-  let end = performance.now();
-  return Math.round(end - start);
+const liveSpeed = document.getElementById("liveSpeed");
+const pingEl = document.getElementById("ping");
+const downEl = document.getElementById("download");
+const upEl = document.getElementById("upload");
+const needle = document.getElementById("needle");
+const serverEl = document.getElementById("server");
+const btn = document.getElementById("startBtn");
+
+
+async function detectServer(){
+try{
+const res = await fetch("https://ipapi.co/json/");
+const data = await res.json();
+serverEl.innerText = `Server: ${data.city}, ${data.country_name}`;
+}catch(e){
+serverEl.innerText = "Server: Auto";
 }
+}
+
+
+async function pingTest(){
+const start = performance.now();
+await fetch("https://www.google.com/favicon.ico",{cache:"no-store"}).catch(()=>{});
+const end = performance.now();
+const ping = Math.round(end-start);
+pingEl.innerText = ping;
+}
+
+
+function updateMeter(speed){
+liveSpeed.innerText = speed.toFixed(1);
+const angle = Math.min(speed,100)/100*180-90;
+needle.style.transform = `rotate(${angle}deg)`;
+}
+
 
 async function downloadTest(){
-  let url = "https://raw.githubusercontent.com/github/explore/main/topics/javascript/javascript.png";
-  let start = performance.now();
-  let r = await fetch(url);
-  let b = await r.blob();
-  let end = performance.now();
-
-  let bits = b.size * 8;
-  let sec = (end - start) / 1000;
-  return (bits / sec / 1024 / 1024).toFixed(2);
+const url = "https://speed.cloudflare.com/__down?bytes=5000000";
+const start = performance.now();
+const res = await fetch(url,{cache:"no-store"});
+const blob = await res.blob();
+const end = performance.now();
+const bits = blob.size*8;
+const time = (end-start)/1000;
+const speed = bits/time/1024/1024;
+downEl.innerText = speed.toFixed(2);
+animateSpeed(speed);
 }
+
 
 async function uploadTest(){
-  let data = new Uint8Array(1024 * 1024); // 1MB fake upload
-  let start = performance.now();
-  await fetch("https://httpbin.org/post", {
-    method: "POST",
-    body: data
-  });
-  let end = performance.now();
-
-  let bits = data.length * 8;
-  let sec = (end - start) / 1000;
-  return (bits / sec / 1024 / 1024).toFixed(2);
+const data = new Blob([new Array(5*1024*1024).join("a")]);
+const start = performance.now();
+await fetch("https://httpbin.org/post",{method:"POST",body:data}).catch(()=>{});
+const end = performance.now();
+const bits = data.size*8;
+const time = (end-start)/1000;
+const speed = bits/time/1024/1024;
+upEl.innerText = speed.toFixed(2);
+animateSpeed(speed);
 }
 
-async function startSpeedTest(){
-  document.getElementById("ping").innerText = "...";
-  document.getElementById("down").innerText = "...";
-  document.getElementById("up").innerText = "...";
 
-  let ping = await pingTest();
-  document.getElementById("ping").innerText = ping;
-
-  let down = await downloadTest();
-  document.getElementById("down").innerText = down;
-
-  let up = await uploadTest();
-  document.getElementById("up").innerText = up;
+function animateSpeed(target){
+let current=0;
+const step = target/40;
+const interval = setInterval(()=>{
+current+=step;
+if(current>=target){
+current=target;
+clearInterval(interval);
 }
+updateMeter(current);
+},20);
+}
+
+
+btn.onclick = async ()=>{
+btn.disabled=true;
+await detectServer();
+await pingTest();
+await downloadTest();
+await uploadTest();
+btn.disabled=false;
+};
