@@ -8,28 +8,45 @@
 </head>
 <body>
 <div class="app">
+<div class="header">
 <h1>Speed Test</h1>
-<p class="brand">Brother_editz05</p>
-
-
-<div class="meter">
-<div id="needle"></div>
-<div class="speed" id="liveSpeed">0</div>
-<div class="unit">Mbps</div>
+<span class="brand">Brother_editz05</span>
 </div>
 
 
-<button id="startBtn">GO</button>
+<div class="gauge">
+<svg viewBox="0 0 200 200">
+<circle cx="100" cy="100" r="80" class="bg" />
+<circle cx="100" cy="100" r="80" class="progress" id="progress" />
+</svg>
+<div class="center">
+<div id="liveSpeed" class="speed">0</div>
+<div class="unit">Mbps</div>
+<div id="mode" class="mode">Idle</div>
+</div>
+</div>
+
+
+<button id="startBtn" class="go-btn">GO</button>
 
 
 <div class="stats">
-<div>Ping: <span id="ping">0</span> ms</div>
-<div>Download: <span id="download">0</span> Mbps</div>
-<div>Upload: <span id="upload">0</span> Mbps</div>
+<div class="stat">
+<span>Ping</span>
+<b id="ping">0 ms</b>
+</div>
+<div class="stat">
+<span>Download</span>
+<b id="download">0 Mbps</b>
+</div>
+<div class="stat">
+<span>Upload</span>
+<b id="upload">0 Mbps</b>
+</div>
 </div>
 
 
-<div id="server">Detecting server...</div>
+<div id="server" class="server">Detecting server...</div>
 </div>
 
 
