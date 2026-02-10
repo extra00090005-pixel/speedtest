@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Brother_editz05 Speed Test</title>
+<style>
+*{box-sizing:border-box;font-family:Inter,Segoe UI,Arial,sans-serif}
+body{
+  margin:0;
+  background:radial-gradient(1200px 600px at 50% -10%,#3a0ca3 0%,#1a052e 40%,#0b0215 100%);
+  color:#fff;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+}
+.container{
+  width:100%;
+  max-width:1200px;
+  padding:28px;
+  background:linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.01));
+  border-radius:22px;
+  backdrop-filter:blur(18px);
+  border:1px solid rgba(255,255,255,0.12);
+  box-shadow:0 30px 80px rgba(0,0,0,0.6);
+  animation:fadeIn 0.8s ease;
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.logo{
+  width:54px;height:54px;border-radius:50%;
+  background:linear-gradient(135deg,#9d4edd,#5a189a);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 20px rgba(157,78,221,0.6);
+}
+.logo span{font-size:26px}
+.brand-name{
+  font-size:26px;font-weight:700;letter-spacing:0.5px
+}
+.menu{display:flex;gap:24px;font-size:14px;color:#d9c7ff}
+.menu span{cursor:pointer;transition:0.3s}
+.menu span:hover{color:#fff}
+
+.main{
+  display:grid;
+  grid-template-columns:1fr 420px 1fr;
+  gap:20px;
+  align-items:center;
+}
+.panel{
+  background:linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02));
+  border-radius:18px;
+  padding:18px;
+  border:1px solid rgba(255,255,255,0.12);
+  box-shadow:inset 0 0 20px rgba(157,78,221,0.08);
+}
+.stat{
+  margin:12px 0;
+}
+.stat-title{font-size:13px;color:#cdb4ff}
+.stat-value{
+  font-size:36px;font-weight:700;margin-top:6px;
+  transition:all 0.4s ease;
+}
+.unit{font-size:14px;color:#aaa;margin-left:4px}
+
+.gauge-box{
+  position:relative;
+  width:100%;
+  aspect-ratio:1/1;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+canvas{width:100%;height:100%}
+.go-btn{
+  position:absolute;
+  bottom:28%;
+  padding:14px 46px;
+  border-radius:40px;
+  border:none;
+  background:linear-gradient(135deg,#9d4edd,#5a189a);
+  color:white;
+  font-size:20px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 0 30px rgba(157,78,221,0.6);
+  transition:0.3s;
+}
+.go-btn:hover{transform:scale(1.05)}
+.go-btn:disabled{opacity:0.6;cursor:not-allowed}
+
+.server-box{
+  margin-top:12px;
+  font-size:13px;
+  color:#d9c7ff;
+  line-height:1.6;
+}
+
+.bottom{
+  margin-top:24px;
+  background:linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.01));
+  border-radius:18px;
+  padding:18px;
+  border:1px solid rgba(255,255,255,0.12);
+}
+.bottom-grid{
+  display:grid;
+  grid-template-columns:1fr 2fr 1fr;
+  gap:18px;
+}
+.speed-value{
+  font-size:42px;font-weight:800;
+  transition:all 0.5s ease;
+}
+.graph{
+  width:100%;height:140px;
+  background:linear-gradient(180deg,rgba(157,78,221,0.15),rgba(0,0,0,0));
+  border-radius:12px;
+  position:relative;
+  overflow:hidden;
+}
+.graph-line{
+  position:absolute;bottom:0;left:0;width:100%;height:100%;
+}
+.clear-btn{
+  padding:10px 20px;border-radius:12px;border:none;
+  background:linear-gradient(135deg,#7b2cbf,#5a189a);
+  color:white;font-size:14px;cursor:pointer;transition:0.3s
+}
+.clear-btn:hover{transform:scale(1.05)}
+
+@media(max-width:1000px){
+  .main{grid-template-columns:1fr}
+  .bottom-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="brand">
+      <div class="logo"><span>speedtest.png</span></div>
+      <div class="brand-name">Brother_editz05</div>
+    </div>
+    <div class="menu">
+      <span>Results</span>
+      <span>Settings</span>
+      <span>About</span>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="panel">
+      <div class="stat">
+        <div class="stat-title">PING</div>
+        <div class="stat-value" id="ping">0<span class="unit"> ms</span></div>
+      </div>
+      <div class="stat">
+        <div class="stat-title">JITTER</div>
+        <div class="stat-value" id="jitter">0<span class="unit"> ms</span></div>
+      </div>
+    </div>
+
+    <div class="gauge-box panel">
+      <canvas id="gauge"></canvas>
+      <button id="startBtn" class="go-btn">GO</button>
+      <div class="server-box" id="serverInfo">Detecting server...</div>
+    </div>
+
+    <div class="panel">
+      <div class="stat">
+        <div class="stat-title">LOSS</div>
+        <div class="stat-value">0<span class="unit"> %</span></div>
+      </div>
+      <div class="stat">
+        <div class="stat-title">STATUS</div>
+        <div class="stat-value" id="status">Ready</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <div class="bottom-grid">
+      <div>
+        <div class="stat-title">DOWNLOAD</div>
+        <div class="speed-value" id="download">0.00<span class="unit"> Mbps</span></div>
+      </div>
+      <div>
+        <div class="stat-title">SPEED GRAPH</div>
+        <canvas id="chart" width="600" height="140" class="graph-line"></canvas>
+      </div>
+      <div>
+        <div class="stat-title">UPLOAD</div>
+        <div class="speed-value" id="upload">0.00<span class="unit"> Mbps</span></div>
+        <button class="clear-btn" id="clearHistory">Clear Results</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const pingEl=document.getElementById('ping');
+const jitterEl=document.getElementById('jitter');
+const downloadEl=document.getElementById('download');
+const uploadEl=document.getElementById('upload');
+const statusEl=document.getElementById('status');
+const serverInfo=document.getElementById('serverInfo');
+const btn=document.getElementById('startBtn');
+const clearBtn=document.getElementById('clearHistory');
+
+const gaugeCanvas=document.getElementById('gauge');
+const ctx=gaugeCanvas.getContext('2d');
+const chartCanvas=document.getElementById('chart');
+const chartCtx=chartCanvas.getContext('2d');
+
+let historyData=JSON.parse(localStorage.getItem('speedHistory')||'[]');
+
+function resizeGauge(){
+  gaugeCanvas.width=gaugeCanvas.offsetWidth;
+  gaugeCanvas.height=gaugeCanvas.offsetHeight;
+}
+window.addEventListener('resize',resizeGauge);
+resizeGauge();
+
+function drawGauge(speed){
+  ctx.clearRect(0,0,gaugeCanvas.width,gaugeCanvas.height);
+  const cx=gaugeCanvas.width/2;
+  const cy=gaugeCanvas.height/2;
+  const r=gaugeCanvas.width/2-20;
+  ctx.beginPath();
+  ctx.arc(cx,cy,r,Math.PI,0);
+  ctx.strokeStyle='#3c096c';
+  ctx.lineWidth=12;
+  ctx.stroke();
+  const angle=Math.PI+(Math.min(speed,200)/200)*Math.PI;
+  ctx.beginPath();
+  ctx.moveTo(cx,cy);
+  ctx.lineTo(cx+r*Math.cos(angle),cy+r*Math.sin(angle));
+  ctx.strokeStyle='#c77dff';
+  ctx.lineWidth=5;
+  ctx.stroke();
+  ctx.fillStyle='#fff';
+  ctx.font='bold 24px Arial';
+  ctx.textAlign='center';
+  ctx.fillText(speed+' Mbps',cx,cy+10);
+}
+
+function drawChart(){
+  chartCtx.clearRect(0,0,chartCanvas.width,chartCanvas.height);
+  if(historyData.length===0) return;
+  const max=Math.max(...historyData.map(h=>h.download));
+  const step=chartCanvas.width/(historyData.length-1||1);
+  chartCtx.beginPath();
+  historyData.forEach((h,i)=>{
+    const x=i*step;
+    const y=chartCanvas.height-(h.download/max)*chartCanvas.height;
+    if(i===0) chartCtx.moveTo(x,y); else chartCtx.lineTo(x,y);
+  });
+  chartCtx.strokeStyle='#c77dff';
+  chartCtx.lineWidth=2;
+  chartCtx.stroke();
+}
+
+async function detectServer(){
+  try{
+    const res=await fetch('https://ipapi.co/json/');
+    const data=await res.json();
+    serverInfo.innerHTML=`Server: ${data.city}, ${data.country_name}<br>IP: ${data.ip}<br>ISP: ${data.org}`;
+  }catch{
+    serverInfo.textContent='Server: Unknown';
+  }
+}
+
+async function measurePing(){
+  let times=[];
+  for(let i=0;i<5;i++){
+    const s=performance.now();
+    await fetch('https://www.google.com/generate_204',{mode:'no-cors'});
+    const e=performance.now();
+    times.push(e-s);
+  }
+  const avg=times.reduce((a,b)=>a+b,0)/times.length;
+  const jit=Math.sqrt(times.map(t=>(t-avg)**2).reduce((a,b)=>a+b,0)/times.length);
+  return {ping:avg.toFixed(0),jitter:jit.toFixed(0)};
+}
+
+async function testDownload(){
+  const url='https://speed.hetzner.de/10MB.bin';
+  const start=performance.now();
+  const res=await fetch(url+'?cache='+Math.random());
+  const blob=await res.blob();
+  const end=performance.now();
+  const bits=blob.size*8;
+  const sec=(end-start)/1000;
+  return (bits/sec/1024/1024).toFixed(2);
+}
+
+async function testUpload(){
+  const data=new Uint8Array(5*1024*1024);
+  const start=performance.now();
+  await fetch('https://httpbin.org/post',{method:'POST',body:data});
+  const end=performance.now();
+  const bits=data.length*8;
+  const sec=(end-start)/1000;
+  return (bits/sec/1024/1024).toFixed(2);
+}
+
+async function startTest(){
+  btn.disabled=true;
+  statusEl.textContent='Testing...';
+  btn.textContent='...';
+
+  const {ping,jitter}=await measurePing();
+  pingEl.innerHTML=ping+'<span class="unit"> ms</span>';
+  jitterEl.innerHTML=jitter+'<span class="unit"> ms</span>';
+
+  const down=await testDownload();
+  downloadEl.innerHTML=down+'<span class="unit"> Mbps</span>';
+  drawGauge(parseFloat(down));
+
+  const up=await testUpload();
+  uploadEl.innerHTML=up+'<span class="unit"> Mbps</span>';
+
+  historyData.push({download:parseFloat(down),upload:parseFloat(up),time:Date.now()});
+  if(historyData.length>12) historyData.shift();
+  localStorage.setItem('speedHistory',JSON.stringify(historyData));
+  drawChart();
+
+  statusEl.textContent='Completed';
+  btn.disabled=false;
+  btn.textContent='GO';
+}
+
+clearBtn.onclick=()=>{historyData=[];localStorage.removeItem('speedHistory');drawChart();};
+btn.onclick=startTest;
+
+detectServer();
+drawChart();drawGauge(0);
+</script>
+</body>
+</html>
