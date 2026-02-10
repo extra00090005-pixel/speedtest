@@ -1,47 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 <title>Brother_editz05 Speed Test</title>
-<style>
-body{
-background:#0b0215;
-color:white;
-font-family:Arial;
-text-align:center;
-padding-top:80px;
-}
-.box{
-width:400px;
-margin:auto;
-padding:20px;
-border-radius:20px;
-background:linear-gradient(135deg,#3c096c,#5a189a,#9d4edd);
-box-shadow:0 0 30px purple;
-}
-.big{font-size:32px;font-weight:bold;color:#e0aaff}
-button{
-margin-top:20px;
-padding:12px 40px;
-border:none;
-border-radius:30px;
-font-size:18px;
-font-weight:bold;
-background:#e0aaff;
-cursor:pointer;
-}
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
+<div class="app">
+<h1>Speed Test</h1>
+<p class="brand">Brother_editz05</p>
 
-<div class="box">
-<h2>⚡ Brother_editz05 Speed Test</h2>
 
-<p>Ping: <span id="ping">0</span> ms</p>
-<p>Download: <span class="big" id="down">0</span> Mbps</p>
-<p>Upload: <span class="big" id="up">0</span> Mbps</p>
-
-<button onclick="startSpeedTest()">GO</button>
+<div class="meter">
+<div id="needle"></div>
+<div class="speed" id="liveSpeed">0</div>
+<div class="unit">Mbps</div>
 </div>
+
+
+<button id="startBtn">GO</button>
+
+
+<div class="stats">
+<div>Ping: <span id="ping">0</span> ms</div>
+<div>Download: <span id="download">0</span> Mbps</div>
+<div>Upload: <span id="upload">0</span> Mbps</div>
+</div>
+
+
+<div id="server">Detecting server...</div>
+</div>
+
 
 <script src="speedtest.js"></script>
 </body>
