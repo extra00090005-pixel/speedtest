@@ -1,3 +1,4 @@
-{"name":"Cloudflare","url":"https://speed.cloudflare.com/__down?bytes=5000000"},
-{"name":"Fast.com","url":"https://ipv4.download.thinkbroadband.com/5MB.zip"}
+[
+{"name":"Cloudflare","url":"https://speed.cloudflare.com/__down?bytes=8000000"},
+{"name":"ThinkBroadband","url":"https://ipv4.download.thinkbroadband.com/10MB.zip"}
 ]
