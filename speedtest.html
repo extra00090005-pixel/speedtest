@@ -1,126 +1,48 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
 <title>Brother_editz05 Speed Test</title>
 <style>
 body{
-margin:0;
 background:#0b0215;
 color:white;
 font-family:Arial;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
+text-align:center;
+padding-top:80px;
 }
 .box{
-width:900px;
-max-width:95%;
-background:linear-gradient(135deg,#240046,#3c096c,#5a189a);
-padding:25px;
+width:400px;
+margin:auto;
+padding:20px;
 border-radius:20px;
-box-shadow:0 0 40px rgba(157,78,221,0.6);
+background:linear-gradient(135deg,#3c096c,#5a189a,#9d4edd);
+box-shadow:0 0 30px purple;
 }
-h1{text-align:center;margin-bottom:20px}
-.stats{
-display:flex;
-justify-content:space-between;
-margin:10px 0;
-font-size:18px;
-}
-.big{
-font-size:40px;
-font-weight:bold;
-color:#e0aaff;
-}
+.big{font-size:32px;font-weight:bold;color:#e0aaff}
 button{
 margin-top:20px;
-width:100%;
-padding:15px;
+padding:12px 40px;
 border:none;
 border-radius:30px;
-font-size:20px;
+font-size:18px;
 font-weight:bold;
-background:#c77dff;
-color:black;
+background:#e0aaff;
 cursor:pointer;
-transition:.3s;
 }
-button:hover{transform:scale(1.05)}
 </style>
 </head>
 <body>
 
 <div class="box">
-<h1>⚡ Brother_editz05 Speed Test</h1>
+<h2>⚡ Brother_editz05 Speed Test</h2>
 
-<div class="stats">Ping: <span id="ping">0</span> ms</div>
-<div class="stats">Download: <span class="big" id="down">0</span> Mbps</div>
-<div class="stats">Upload: <span class="big" id="up">0</span> Mbps</div>
-<div class="stats">Server: <span id="server">Detecting...</span></div>
+<p>Ping: <span id="ping">0</span> ms</p>
+<p>Download: <span class="big" id="down">0</span> Mbps</p>
+<p>Upload: <span class="big" id="up">0</span> Mbps</p>
 
-<button onclick="startTest()">GO</button>
+<button onclick="startSpeedTest()">GO</button>
 </div>
 
-<script>
-async function getServer(){
-  try{
-    let r=await fetch("https://api.ipify.org?format=json");
-    let d=await r.json();
-    document.getElementById("server").innerText="IP: "+d.ip;
-  }catch(e){
-    document.getElementById("server").innerText="Unknown";
-  }
-}
-
-async function pingTest(){
-  let start=performance.now();
-  await fetch("https://api.ipify.org?format=json");
-  let end=performance.now();
-  return Math.round(end-start);
-}
-
-async function downloadTest(){
-  let url="https://speed.cloudflare.com/__down?bytes=5000000";
-  let start=performance.now();
-  let r=await fetch(url);
-  let b=await r.blob();
-  let end=performance.now();
-  let bits=b.size*8;
-  let sec=(end-start)/1000;
-  return (bits/sec/1024/1024).toFixed(2);
-}
-
-async function uploadTest(){
-  let data=new Uint8Array(2*1024*1024);
-  let start=performance.now();
-  await fetch("https://speed.cloudflare.com/__up",{
-    method:"POST",
-    body:data
-  });
-  let end=performance.now();
-  let bits=data.length*8;
-  let sec=(end-start)/1000;
-  return (bits/sec/1024/1024).toFixed(2);
-}
-
-async function startTest(){
-  document.getElementById("ping").innerText="...";
-  document.getElementById("down").innerText="...";
-  document.getElementById("up").innerText="...";
-
-  let p=await pingTest();
-  document.getElementById("ping").innerText=p;
-
-  let d=await downloadTest();
-  document.getElementById("down").innerText=d;
-
-  let u=await uploadTest();
-  document.getElementById("up").innerText=u;
-}
-
-getServer();
-</script>
+<script src="speedtest.js"></script>
 </body>
 </html>
